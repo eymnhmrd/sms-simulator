@@ -9,6 +9,13 @@
     pkgs.python314
     pkgs.uv
     pkgs.python313Packages.pip
+    pkgs.apt
+    pkgs.redis
+    pkgs.systemd
+    pkgs.docker
+    pkgs.docker-compose
+    pkgs.rootlesskit      
+    pkgs.slirp4netns      
     # pkgs.python311Packages.pip
     # pkgs.nodejs_22
     # pkgs.nodePackages.nodemon
@@ -49,6 +56,7 @@
       };
       # Runs when the workspace is (re)started
       onStart = {
+        start-docker = "dockerd-rootless.sh &";
         # Example: start a background task to watch and re-build backend code
         # watch-backend = "npm run watch-backend";
       };

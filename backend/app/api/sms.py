@@ -1,8 +1,22 @@
 from fastapi import APIRouter, HTTPException
 from app.models.sms import SMSCreate, SMS
 from app.services.store import SMS_STORE
+from app.queue.redis_queue import push_to_queue
+
 
 router = APIRouter()
+
+# @router.post("/sms")
+# def send_sms(payload: SMSCreate):
+#     sms = SMS.create(payload)
+
+#     # store it
+#     SMS_STORE[sms.id] = sms
+
+#     return {
+#         "message": "SMS accepted",
+#         "sms_id": sms.id
+#     }
 
 @router.post("/sms")
 def send_sms(payload: SMSCreate):
@@ -11,8 +25,11 @@ def send_sms(payload: SMSCreate):
     # store it
     SMS_STORE[sms.id] = sms
 
+    # NEW: push to queue
+    push_to_queue(sms.id)
+
     return {
-        "message": "SMS accepted",
+        "message": "SMS accepted and queued",
         "sms_id": sms.id
     }
 
